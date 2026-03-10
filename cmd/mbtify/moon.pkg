@@ -1,0 +1,11 @@
+import {
+  "sennenki/mbtify" @lib,
+  "sennenki/clipboard",
+  "moonbitlang/x/sys",
+  "moonbitlang/core/strconv",
+  "Yoorkin/ArgParser" @argparser
+}
+
+options(
+  "is-main": true,
+)
