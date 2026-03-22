@@ -7,11 +7,16 @@ This commandline tool helps you prefix the lines in your clipboard with `#|`. Su
 Usage:
 
 ```
-Usage: mbtify [options] [indent] ...
+Usage: mbtify [options] [indent]
+
+Arguments:
+  indent  Indentation level
 
 Options:
-  -f, --force    Force mbtification even if already mbtified
-  -q, --quiet    Suppress output
+  -h, --help       Show help information.
+  -f, --force      Force mbtification even if already mbtified
+  -q, --quiet      Suppress output
+  -d, --dismbtify  Dismbtify the text
 ```
 
 Example. Clipboard data before:
@@ -26,7 +31,16 @@ texts
 After executing `mbtify 2`:
 
 ```
+  #|many
   #|lines
   #|of
   #|texts
+```
+
+And then `mbtify -d`:
+
+```
+many lines
+of
+texts
 ```
