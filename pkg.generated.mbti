@@ -2,6 +2,8 @@
 package "sennenki/mbtify"
 
 // Values
+pub fn dismbtify(String) -> String?
+
 pub fn mbtify(String, indent? : Int, force? : Bool) -> String?
 
 // Errors

@@ -7,6 +7,7 @@ fn main {
       about="Force mbtification even if already mbtified",
     ),
     @argparse.FlagArg::new("quiet", short='q', about="Suppress output"),
+    @argparse.FlagArg::new("dismbtify", short='d', about="Dismbtify the text"),
   ]
   let indent_arg = @argparse.PositionArg::new(
     "indent",
@@ -34,28 +35,42 @@ fn main {
   }
   let force = matches.flags.get_or_default("force", false)
   let quiet = matches.flags.get_or_default("quiet", false)
+  let dismbtify = matches.flags.get_or_default("dismbtify", false)
+  fn log(s) {
+    if !quiet {
+      println(s)
+    }
+  }
   let text = @clipboard.read_text() catch {
     e => {
       println("Failed to read from clipboard: \{e}")
       return
     }
   }
-  match @lib.mbtify(text, indent~, force~) {
-    None => {
-      if !quiet {
-        println("Text is already mbtified. Use --force to mbtify anyway.")
-      }
-      return
-    }
-    Some(mbtified) => {
-      @clipboard.write_text(mbtified) catch {
-        e => {
-          println("Failed to write to clipboard: \{e}")
-          return
+  if dismbtify {
+    match @lib.dismbtify(text) {
+      None => log("Text is not mbtified")
+      Some(dismbtified) => {
+        @clipboard.write_text(dismbtified) catch {
+          e => {
+            println("Failed to write to clipboard: \{e}")
+            return
+          }
         }
+        log("Text dismbtified and copied to clipboard.")
       }
-      if !quiet {
-        println("Text mbtified and copied to clipboard.")
+    }
+  } else {
+    match @lib.mbtify(text, indent~, force~) {
+      None => log("Text is already mbtified. Use --force to mbtify anyway.")
+      Some(mbtified) => {
+        @clipboard.write_text(mbtified) catch {
+          e => {
+            println("Failed to write to clipboard: \{e}")
+            return
+          }
+        }
+        log("Text mbtified and copied to clipboard.")
       }
     }
   }
