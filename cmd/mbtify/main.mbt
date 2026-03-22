@@ -1,43 +1,48 @@
-const Usage =
-  #|Usage: mbtify [options] [indent] ...
-  #|
-  #|Options:
-  #|  -f, --force    Force mbtification even if already mbtified
-  #|  -q, --quiet    Suppress output
-
+///|
 fn main {
-  let force = Ref::new(false)
-  let quiet = Ref::new(false)
-  let specs = [
-    ("-f", "--force", @argparser.Set(force), "Force mbtification even if already mbtified"),
-    ("-q", "--quiet", @argparser.Set(quiet), "Suppress output")
+  let flags = [
+    @argparse.FlagArg::new(
+      "force",
+      short='f',
+      about="Force mbtification even if already mbtified",
+    ),
+    @argparse.FlagArg::new("quiet", short='q', about="Suppress output"),
   ]
-  let mut indent = None
-  @argparser.parse(specs, s => indent = Some(s), Usage, @sys.get_cli_args()[1:].to_array()) catch {
-    @argparser.ErrorMsg(msg) => {
-      println("Error parsing arguments: \{msg}")
-      return
-    }
+  let indent_arg = @argparse.PositionArg::new(
+    "indent",
+    num_args=@argparse.ValueRange::new(lower=0, upper=1),
+    about="Indentation level",
+  )
+  let command = @argparse.Command::new("mbtify", flags~, positionals=[
+    indent_arg,
+  ])
+  let matches = command.parse() catch {
     e => {
-      println("Unexpected error: \{e}")
+      println("Error parsing arguments: \{e}")
       return
     }
   }
-  let indent_value = @strconv.parse_int(indent.unwrap_or("0")) catch {
-    e => {
-      println("Invalid indent value: \{e}")
-      return
-    }
+  let indent = match matches.values.get("indent") {
+    Some([indent_str]) =>
+      @strconv.parse_int(indent_str) catch {
+        e => {
+          println("Invalid indent value: \{e}")
+          return
+        }
+      }
+    _ => 0
   }
+  let force = matches.flags.get_or_default("force", false)
+  let quiet = matches.flags.get_or_default("quiet", false)
   let text = @clipboard.read_text() catch {
     e => {
       println("Failed to read from clipboard: \{e}")
       return
     }
   }
-  match @lib.mbtify(text, indent=indent_value, force=force.val) {
+  match @lib.mbtify(text, indent~, force~) {
     None => {
-      if !quiet.val {
+      if !quiet {
         println("Text is already mbtified. Use --force to mbtify anyway.")
       }
       return
@@ -49,7 +54,7 @@ fn main {
           return
         }
       }
-      if !quiet.val {
+      if !quiet {
         println("Text mbtified and copied to clipboard.")
       }
     }
