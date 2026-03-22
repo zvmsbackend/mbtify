@@ -1,3 +1,4 @@
+///|
 fn already_mbitified(lines : Iter[StringView]) -> Bool {
   let mut indent = None
   for line in lines {
@@ -18,7 +19,12 @@ fn already_mbitified(lines : Iter[StringView]) -> Bool {
   true
 }
 
-pub fn mbtify(text : String, indent? : Int = 0, force? : Bool = false) -> String? {
+///|
+pub fn mbtify(
+  text : String,
+  indent? : Int = 0,
+  force? : Bool = false,
+) -> String? {
   let lines = text.split("\n")
   if !force && already_mbitified(lines) {
     return None

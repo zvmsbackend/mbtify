@@ -1,0 +1,14 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "sennenki/mbtify"
+
+// Values
+pub fn mbtify(String, indent? : Int, force? : Bool) -> String?
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+
