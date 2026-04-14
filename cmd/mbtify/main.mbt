@@ -25,7 +25,7 @@ fn main {
   }
   let indent = match matches.values.get("indent") {
     Some([indent_str]) =>
-      @strconv.parse_int(indent_str) catch {
+      @string.parse_int(indent_str) catch {
         e => {
           println("Invalid indent value: \{e}")
           return
@@ -43,7 +43,7 @@ fn main {
   }
   let text = @clipboard.read_text() catch {
     e => {
-      println("Failed to read from clipboard: \{e}")
+      println("Failed to read from clipboard: \{e.to_repr()}")
       return
     }
   }
@@ -53,7 +53,7 @@ fn main {
       Some(dismbtified) => {
         @clipboard.write_text(dismbtified) catch {
           e => {
-            println("Failed to write to clipboard: \{e}")
+            println("Failed to write to clipboard: \{e.to_repr()}")
             return
           }
         }
@@ -66,7 +66,7 @@ fn main {
       Some(mbtified) => {
         @clipboard.write_text(mbtified) catch {
           e => {
-            println("Failed to write to clipboard: \{e}")
+            println("Failed to write to clipboard: \{e.to_repr()}")
             return
           }
         }

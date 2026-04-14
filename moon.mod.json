@@ -1,8 +1,8 @@
 {
   "name": "sennenki/mbtify",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "deps": {
-    "sennenki/clipboard": "0.1.0"
+    "sennenki/clipboard": "0.1.1"
   },
   "readme": "README.mbt.md",
   "repository": "https://github.com/zvmsbackend/mbtify",
